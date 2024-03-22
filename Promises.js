@@ -65,10 +65,24 @@ const cart = ["Laptop", "Headphones", "Shoes", "Vegetables"];
 
 const promise = createOrder(cart);
 
-promise.then((orderId) => {
-  console.log(orderId);
-  proceedToPayment(orderId);
-});
+promise
+  .then((orderId) => {
+    console.log(orderId);
+    return orderId;
+  })
+  .then((orderId) => {
+    return proceedToPayment(orderId);
+  })
+  .then((PaymentInfo) => {
+    console.log(PaymentInfo);
+    return showOrderSummary(PaymentInfo);
+  })
+  .then((orderSummary) => {
+    console.log(orderSummary); // Log or do something with the order summary
+  })
+  .catch(function (err) {
+    console.log(err.message);
+  });
 
 function createOrder(cart) {
   const promise = new Promise((resolve, reject) => {
@@ -76,9 +90,7 @@ function createOrder(cart) {
       const error = new Error("Invalid cart");
       return reject(error);
     }
-    // else {
-    //   resolve(cart);
-    // }
+
     const orderId = "1234556789";
     if (orderId) {
       resolve(orderId);
@@ -87,17 +99,31 @@ function createOrder(cart) {
   return promise;
 }
 
-function validateCart(cart) {
-  return true;
-}
-
 function proceedToPayment(orderId) {
-  const paymentPromise = new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     if (orderId) {
-      resolve(orderId);
+      console.log("Payment successful!!!");
     } else {
       const error = new Error("Invalid order id");
       return reject(error);
     }
   });
+}
+
+function showOrderSummary(PaymentInfo) {
+  return new Promise((resolve, reject) => {
+    if (PaymentInfo) {
+      const orderSummary = "Order summary"; // Replace this with actual order summary data
+      resolve(orderSummary);
+      console.log(orderSummary);
+      
+    } else {
+      const error = new Error("Invalid PaymentInfo");
+      reject(error);
+    }
+  });
+}
+
+function validateCart(cart) {
+  return true;
 }
